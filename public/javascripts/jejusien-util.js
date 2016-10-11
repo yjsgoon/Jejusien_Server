@@ -2,13 +2,13 @@
  * Created by JiSoo on 2016-10-05.
  */
 
-var DM = {};
+var JS = {};
 
-DM.random = function(max) {
+JS.random = function(max) {
     return parseInt(Math.random(max)*max);
 };
 
-DM.loadScript = function(url, callback, charset) {
+JS.loadScript = function(url, callback, charset) {
     var head= document.getElementsByTagName('head')[0];
     var script= document.createElement('script');
     script.type= 'text/javascript';
@@ -36,7 +36,7 @@ DM.loadScript = function(url, callback, charset) {
 
 };
 
-DM.getParameter = function(name ) {
+JS.getParameter = function(name ) {
     name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
     var regexS = "[\\?&]"+name+"=([^&#]*)";
     var regex = new RegExp( regexS );

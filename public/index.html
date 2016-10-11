@@ -20,18 +20,18 @@
 
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js'></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script src="javascripts/dmaps.js"></script>
-    <script src="javascripts/dmaps-util.js"></script>
+    <script src="javascripts/jejusien.js"></script>
+    <script src="javascripts/jejusien-util.js"></script>
     <script>
         $(document).ready(function(){
 
-            var path = DM.getParameter('app');
+            var path = JS.getParameter('app');
             if(!path) {
                 //div().append().text('Please make first application');
                 return;
             }
 
-            DM.loadScript('/app/'+path+'.js');
+            JS.loadScript('/app/'+path+'.js');
 
         });
     </script>
