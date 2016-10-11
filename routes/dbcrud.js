@@ -8,8 +8,8 @@ var router = express.Router();
 var db = require('../db');
 
 router.get('/put', function(req, res, next) {
-    db.one("INSERT INTO [ table_name ] VALUES( [ values ] ) ON CONFLICT ( [ keys ] ) DO UPDATE SET VALUE = [ value ];",
-        [ params ])
+    db.one("INSERT INTO beer(beername, capacity) VALUES($1, $2) ON CONFLICT (beername) DO UPDATE SET VALUE = $3;",
+        [req.query.beername, req.query.capacity])
         .then(function () {
             res.json({
                 resultCode: 0
@@ -24,11 +24,11 @@ router.get('/put', function(req, res, next) {
 });
 
 router.get('/get', function(req, res, next) {
-    db.any("SELECT [ * ] FROM [ table_name ] WHERE [ * ];", [ params ])
+    db.any("SELECT * FROM beer WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             res.json({
-                resultCode: 0//,
-                // info: data
+                resultCode: 0,
+                info: data
             })
         })
         .catch(function (err) {
@@ -40,7 +40,7 @@ router.get('/get', function(req, res, next) {
 });
 
 router.get('/delete', function(req, res, next) {
-    db.one("DELETE FROM [ table_name ] WHERE [ * ];", [ params ])
+    db.one("DELETE FROM beer WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             res.json({
                 resultCode: 0
