@@ -1,3 +1,4 @@
 {
-  "DATABASE_URL": "postgres://mhvqgglbmagyuu:TS-TrG33f-36o8SxGv57LfJ99P@ec2-54-235-254-199.compute-1.amazonaws.com:5432/d5inj70min5qtb"
+  "DATABASE_URL": "postgres://mhvqgglbmagyuu:TS-TrG33f-36o8SxGv57LfJ99P@ec2-54-235-254-199.compute-1.amazonaws.com:5432/d5inj70min5qtb",
+  "secret": "!jeju@jien#"
 }
