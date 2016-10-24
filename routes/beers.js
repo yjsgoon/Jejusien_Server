@@ -4,12 +4,21 @@
 
 var express = require('express');
 var router = express.Router();
-
+var crypto = require('./jeju_crypto');
 var db = require('../db');
 
-// TODO: 권한 설정
 router.get('/put', function(req, res, next) {
-    db.one("INSERT INTO beer(beername) VALUES($1) ON CONFLICT (beername) DO UPDATE SET VALUE = $2;",
+    var jauth = JSON.stringify(req.body.jauth);
+    jauth = crypto.decrypt(jauth);
+
+    if (jauth.status !== 1) {
+        res.json({
+            resultCode: -1,
+            msg: 'don\'t access database'
+        });
+    }
+
+    db.one("INSERT INTO beer(beername) VALUES($1) ON CONFLICT (beername) DO UPDATE SET beername = $2;",
         [req.query.beername, req.query.beername])
         .then(function () {
             res.json({
@@ -56,8 +65,17 @@ router.get('/get/all', function(req, res, next) {
         });
 });
 
-// TODO: 권한 설정
 router.get('/delete', function(req, res, next) {
+    var jauth = JSON.stringify(req.body.jauth);
+    jauth = crypto.decrypt(jauth);
+
+    if (jauth.status !== 1) {
+        res.json({
+            resultCode: -1,
+            msg: 'don\'t access database'
+        });
+    }
+
     db.one("DELETE FROM beer WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             res.json({
