@@ -2,29 +2,10 @@
  * Created by JiSoo on 2016-10-25.
  */
 
-// var PythonShell = require('python-shell');
-//
-// module.exports.exec = function(file, args) {
-//     var options = {
-//         mode: 'text',
-//         pythonPath: '/python',
-//         pythonOption: ['-u'],
-//         scriptPath: '',
-//         args: args
-//     };
-//
-//     // todo: ERROR HANDLING
-//     return PythonShell.run(file, options, function(err, results) {
-//         if (err)
-//             console.log(err);
-//         return results;
-//     });
-// };
-
 var PythonShell = require('python-shell');
 
-
 module.exports.exec = function(file, path, args) {
+    var ret;
     var options = {
         mode: 'text',
         pythonPath: '',
@@ -38,4 +19,3 @@ module.exports.exec = function(file, path, args) {
         console.log(results);
     });
 };
-
