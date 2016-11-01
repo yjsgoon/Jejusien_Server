@@ -8,8 +8,8 @@ var crypto = require('./jeju_crypto');
 var db = require('../db');
 
 router.get('/put', function(req, res, next) {
-    var jauth = JSON.stringify(req.body.jauth);
-    jauth = crypto.decrypt(jauth);
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
 
     if (jauth.status !== 1) {
         res.json({
@@ -66,8 +66,8 @@ router.get('/get/all', function(req, res, next) {
 });
 
 router.get('/delete', function(req, res, next) {
-    var jauth = JSON.stringify(req.body.jauth);
-    jauth = crypto.decrypt(jauth);
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
 
     if (jauth.status !== 1) {
         res.json({

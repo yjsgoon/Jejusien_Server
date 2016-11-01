@@ -8,10 +8,14 @@ var crypto = require('./jeju_crypto');
 var db = require('../db');
 
 router.get('/put', function(req, res, next) {
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
+
     db.one("SELECT bid FROM beers WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             db.any("INSERT INTO drinkbeers(uid, bid, prefer, ipt_date, upt_date) VALUES($1, $2, 1, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET prefer = 1;",
-                [parseInt(req.query.uid), parseInt(data.bid)])
+                [jauth.uid, parseInt(data.bid)])
+                // [parseInt(req.query.uid), parseInt(data.bid)])
                 .then(function () {
                     res.json({
                         resultCode: 0
@@ -33,7 +37,11 @@ router.get('/put', function(req, res, next) {
 });
 
 router.get('/get', function(req, res, next) {
-    db.any("SELECT bid FROM drinkbeers WHERE uid = $1 AND prefer = $2;", [req.query.uid, 1])
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
+
+    //db.any("SELECT bid FROM drinkbeers WHERE uid = $1 AND prefer = $2;", [req.query.uid, 1])
+    db.any("SELECT bid FROM drinkbeers WHERE uid = $1 AND prefer = $2;", [jauth.uid, 1])
         .then(function (data) {
             var i;
             var beerinfo = [];
@@ -64,10 +72,14 @@ router.get('/get', function(req, res, next) {
 });
 
 router.get('/delete', function(req, res, next) {
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
+
     db.one("SELECT bid FROM beers WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             db.any("INSERT INTO drinkbeers(uid, bid, prefer, ipt_date, upt_date) VALUES($1, $2, 0, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET prefer = 0;",
-                [parseInt(req.query.uid), parseInt(data.bid)])
+                [jauth.uid, parseInt(data.bid)])
+                // [parseInt(req.query.uid), parseInt(data.bid)])
                 .then(function () {
                     res.json({
                         resultCode: 0

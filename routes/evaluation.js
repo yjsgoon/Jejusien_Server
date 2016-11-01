@@ -10,11 +10,15 @@ var db = require('../db');
 router.get('/put', function(req, res, next) {
     var bid;
     var cnt_eval = 0, old_eval = 0, new_eval = 0;
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
+
     db.one("SELECT * FROM beers WHERE beername = $1", [req.query.beername])
         .then(function(data) {
             bid = data.bid;
 
-            db.one("SELECT evaluation FROM drinkbeers WHERE uid = $1 AND beername = $2", [req.query.uid, req.query.beername])
+            db.one("SELECT evaluation FROM drinkbeers WHERE uid = $1 AND beername = $2", [jauth.uid, req.query.beername])
+            // db.one("SELECT evaluation FROM drinkbeers WHERE uid = $1 AND beername = $2", [req.query.uid, req.query.beername])
                 .then(function(data) {
                     old_eval = data.evaluation;
                 })
@@ -31,7 +35,8 @@ router.get('/put', function(req, res, next) {
                 });
 
             db.any("INSERT INTO drinkbeers(uid, bid, evaluation, ipt_date, upt_date) VALUES($1, $2, $3, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET evaluation = $4;",
-                [parseInt(req.query.uid), parseInt(bid), parseInt(req.query.evaluation), parseInt(req.query.evaluation)])
+                [jauth.uid, parseInt(bid), parseInt(req.query.evaluation), parseInt(req.query.evaluation)])
+                // [parseInt(req.query.uid), parseInt(bid), parseInt(req.query.evaluation), parseInt(req.query.evaluation)])
                 .then(function () {
                     res.json({
                         resultCode: 0
@@ -69,7 +74,11 @@ router.get('/put', function(req, res, next) {
 });
 
 router.get('/get', function(req, res, next) {
-    db.any("SELECT * FROM drinkbeers WHERE uid = $1 AND evaluation > 0;", [req.query.uid])
+    var jauth = crypto.decrypt(req.query.jauth);
+    jauth = JSON.parse(jauth);
+
+    db.any("SELECT * FROM drinkbeers WHERE uid = $1 AND evaluation > 0;", [jauth.uid])
+    // db.any("SELECT * FROM drinkbeers WHERE uid = $1 AND evaluation > 0;", [req.query.uid])
         .then(function (data) {
             res.json({
                 resultCode: 0,
