@@ -23,7 +23,6 @@ var upload = multer({ storage: storage }).single('file');
 
 router.post('/put', function(req, res) {
     console.log(req.body);
-    console.log(req.files);
 
     upload(req, res, function(err) {
         if (err) {
