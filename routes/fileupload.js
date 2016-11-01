@@ -4,7 +4,9 @@
 
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 var multer = require('multer');
+var fs = require('fs');
 
 var filepath = './uploads';
 
@@ -36,11 +38,25 @@ router.post('/put', function(req, res) {
     });
 });
 
-// TODO: ERROR HANDLING
-router.post('/get', function(req, res) {
-    res.sendFile(path.join(__dirname, './uploads', req.body.filename));
+router.get('/get', function (req, res) {
+    if (!req.query.filename) {
+        res.json({
+            resultCode: -1,
+            msg: '파일명을 입력해주세요.'
+        });
+    }
+    else {
+        fs.readFile('./uploads/' + req.query.filename, function (err, data) {
+            if (err) {
+                res.json({
+                    resultCode: -1,
+                    msg: '존재하지 않는 파일입니다.'
+                });
+            }
+
+            res.sendFile(path.join(__dirname, '../uploads', req.query.filename));
+        });
+    }
 });
-
-
 
 module.exports = router;
