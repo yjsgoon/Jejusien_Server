@@ -18,7 +18,7 @@ router.get('/put', function(req, res, next) {
         });
     }
 
-    db.one("INSERT INTO beer(beername) VALUES($1) ON CONFLICT (beername) DO UPDATE SET beername = $2;",
+    db.any("INSERT INTO beers(beername) VALUES($1) ON CONFLICT (beername) DO UPDATE SET beername = $2;",
         [req.query.beername, req.query.beername])
         .then(function () {
             res.json({
@@ -34,7 +34,7 @@ router.get('/put', function(req, res, next) {
 });
 
 router.get('/get', function(req, res, next) {
-    db.any("SELECT * FROM beer WHERE beername = $1;", [req.query.beername])
+    db.any("SELECT * FROM beers WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             res.json({
                 resultCode: 0,
@@ -50,7 +50,7 @@ router.get('/get', function(req, res, next) {
 });
 
 router.get('/get/all', function(req, res, next) {
-    db.any("SELECT * FROM beer;", [])
+    db.any("SELECT * FROM beers;", [])
         .then(function (data) {
             res.json({
                 resultCode: 0,
@@ -76,7 +76,7 @@ router.get('/delete', function(req, res, next) {
         });
     }
 
-    db.one("DELETE FROM beer WHERE beername = $1;", [req.query.beername])
+    db.any("DELETE FROM beers WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             res.json({
                 resultCode: 0

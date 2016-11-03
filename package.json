@@ -23,7 +23,9 @@
     "pg": "^6.1.0",
     "pg-promise": "^5.3.4",
     "python-shell": "^0.4.0",
-    "stylus": "^0.54.5"
+    "request": "^2.78.0",
+    "stylus": "^0.54.5",
+    "underscore": "^1.8.3"
   },
   "repository": {
     "type": "git",
