@@ -7,6 +7,7 @@ var router = express.Router();
 var path = require('path');
 var multer = require('multer');
 var fs = require('fs');
+var request = require('request');
 
 var filepath = './uploads';
 
@@ -31,8 +32,19 @@ router.post('/put', function(req, res) {
                 msg: err
             });
         }
-        res.json({
-            resultCode: 0
+        request('http://sienlogo.herokuapp.com/api/logo?url=https://jejusien.herokuapp.com/fileupload/get?filename='+req.body.fname+'.jpg', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.json({
+                    resultCode: 0,
+                    data: JSON.parse(response.body).logo
+                });
+            }
+            else {
+                res.json({
+                    resultCode: -1,
+                    msg: '이미지 인식 실패'
+                })
+            }
         });
     });
 });
