@@ -66,28 +66,28 @@ router.get('/get/all', function(req, res, next) {
 });
 
 router.get('/delete', function(req, res, next) {
-    var jauth = crypto.decrypt(req.query.jauth);
-    jauth = JSON.parse(jauth);
-
-    if (jauth.status !== 1) {
-        res.json({
-            resultCode: -1,
-            msg: 'don\'t access database'
-        });
-    }
-
-    db.any("DELETE FROM beers WHERE beername = $1;", [req.query.beername])
-        .then(function (data) {
-            res.json({
-                resultCode: 0
-            })
-        })
-        .catch(function (err) {
-            res.json({
-                resultCode: -1,
-                msg: err
-            })
-        });
+    // var jauth = crypto.decrypt(req.query.jauth);
+    // jauth = JSON.parse(jauth);
+    //
+    // if (jauth.status !== 1) {
+    //     res.json({
+    //         resultCode: -1,
+    //         msg: 'don\'t access database'
+    //     });
+    // }
+    //
+    // db.any("DELETE FROM beers WHERE beername = $1;", [req.query.beername])
+    //     .then(function (data) {
+    //         res.json({
+    //             resultCode: 0
+    //         })
+    //     })
+    //     .catch(function (err) {
+    //         res.json({
+    //             resultCode: -1,
+    //             msg: err
+    //         })
+    //     });
 });
 
 module.exports = router;

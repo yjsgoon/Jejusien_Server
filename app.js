@@ -10,7 +10,6 @@ var beers = require('./routes/beers');
 var wishlist = require('./routes/wishlist');
 var evaluation = require('./routes/evaluation');
 var fileupload = require('./routes/fileupload');
-// var migration = require('./routes/migration');
 
 var app = express();
 
@@ -33,7 +32,6 @@ app.use('/beers', beers);
 app.use('/wishlist', wishlist);
 app.use('/evaluation', evaluation);
 app.use('/fileupload', fileupload);
-// app.use('/migration', migration);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
