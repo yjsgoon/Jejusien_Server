@@ -23,8 +23,6 @@ var storage =   multer.diskStorage({
 var upload = multer({ storage: storage }).single('file');
 
 router.post('/put', function(req, res) {
-    console.log(req.body);
-
     upload(req, res, function(err) {
         if (err) {
             res.json({
@@ -32,7 +30,7 @@ router.post('/put', function(req, res) {
                 msg: err
             });
         }
-        request('http://sienlogo.herokuapp.com/api/logo?url=https://jejusien.herokuapp.com/fileupload/get?filename='+req.body.fname+'.jpg', function (error, response, body) {
+        request('http://sienlogo.herokuapp.com/api/logo?url=https://jejusien.herokuapp.com/fileupload/get?filename='+req.body.fname, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 res.json({
                     resultCode: 0,
