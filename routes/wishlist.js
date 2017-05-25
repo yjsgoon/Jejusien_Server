@@ -11,7 +11,21 @@ router.get('/put', function(req, res, next) {
     var jauth = crypto.decrypt(req.query.jauth);
     jauth = JSON.parse(jauth);
 
-    db.one("SELECT bid FROM beers WHERE beername = $1;", [req.query.beername])
+    db.any("INSERT INTO drinkbeers(uid, bid, prefer, ipt_date, upt_date) VALUES($1, $2, 1, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET prefer = 1;",
+        [jauth.uid, res.query.bid])
+        .then(function() {
+            res.json({
+                resultCode: 0
+            });
+        })
+        .catch(function(err) {
+            res.json({
+                resultCode: -1,
+                msg: err
+            });
+        });
+
+/*    db.one("SELECT bid FROM beers WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             db.any("INSERT INTO drinkbeers(uid, bid, prefer, ipt_date, upt_date) VALUES($1, $2, 1, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET prefer = 1;",
                 [jauth.uid, parseInt(data.bid)])
@@ -33,17 +47,20 @@ router.get('/put', function(req, res, next) {
                 resultCode: -1,
                 msg: err
             })
-        });
+        });*/
 });
 
 router.get('/get', function(req, res, next) {
     var jauth = crypto.decrypt(req.query.jauth);
     jauth = JSON.parse(jauth);
 
-    //db.any("SELECT bid FROM drinkbeers WHERE uid = $1 AND prefer = $2;", [req.query.uid, 1])
     db.any("SELECT bid FROM drinkbeers WHERE uid = $1 AND prefer = $2;", [jauth.uid, 1])
         .then(function (data) {
-            var i;
+            res.json({
+                resultCode: 0,
+                info: data
+            });
+            /*var i;
             var beerinfo = [];
             var flag = undefined;
             for (i = 0; i < data.length; i++) {
@@ -61,7 +78,7 @@ router.get('/get', function(req, res, next) {
                 res.json({
                     resultCode: 0,
                     info: beerinfo
-                });
+                });*/
         })
         .catch(function (err) {
             res.json({
@@ -75,7 +92,20 @@ router.get('/delete', function(req, res, next) {
     var jauth = crypto.decrypt(req.query.jauth);
     jauth = JSON.parse(jauth);
 
-    db.one("SELECT bid FROM beers WHERE beername = $1;", [req.query.beername])
+    db.any("INSERT INTO drinkbeers(uid, bid, prefer, ipt_date, upt_date) VALUES($1, $2, 0, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET prefer = 0;",
+        [jauth.uid, res.query.bid])
+        .then(function() {
+            res.json({
+                resultCode: 0
+            })
+        })
+        .catch(function(err) {
+            res.json({
+                resultCode: -1,
+                msg: err
+            })
+        });
+/*    db.one("SELECT bid FROM beers WHERE beername = $1;", [req.query.beername])
         .then(function (data) {
             db.any("INSERT INTO drinkbeers(uid, bid, prefer, ipt_date, upt_date) VALUES($1, $2, 0, now(), now()) ON CONFLICT (uid, bid) DO UPDATE SET prefer = 0;",
                 [jauth.uid, parseInt(data.bid)])
@@ -97,7 +127,7 @@ router.get('/delete', function(req, res, next) {
                 resultCode: -1,
                 msg: err
             })
-        });
+        });*/
 });
 
 module.exports = router;
